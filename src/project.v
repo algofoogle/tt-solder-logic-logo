@@ -1,6 +1,7 @@
 `default_nettype none
 
 parameter LOGO_SIZE = 128;  // Size of the logo in pixels
+parameter LOGO_HEIGHT = 64; // AMM.
 parameter DISPLAY_WIDTH = 640;  // VGA display width
 parameter DISPLAY_HEIGHT = 480;  // VGA display height
 
@@ -64,11 +65,11 @@ module tt_um_vga_solder1000 (
 
   wire [9:0] x = pix_x - logo_left;
   wire [9:0] y = pix_y - logo_top;
-  wire logo_pixels = cfg_tile || (x[9:7] == 0 && y[9:7] == 0);
+  wire logo_pixels = cfg_tile || (x[9:7] == 0 && y[9:6] == 0);
 
   bitmap_rom rom1 (
       .x(x[6:0]),
-      .y(y[6:0]),
+      .y({y[5:0],1'b0}),
       .pixel(pixel_value)
   );
 
@@ -120,7 +121,7 @@ module tt_um_vga_solder1000 (
           dir_y <= 1;
           color_index <= color_index + 1;
         end
-        if (logo_top + 1 == DISPLAY_HEIGHT - LOGO_SIZE && dir_y) begin
+        if (logo_top + 1 == DISPLAY_HEIGHT - LOGO_HEIGHT && dir_y) begin
           dir_y <= 0;
           color_index <= color_index + 1;
         end
